@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "electron:start": "yarn build --base-href ./ && cd my-electron && yarn start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
