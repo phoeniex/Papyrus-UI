@@ -1,0 +1,16 @@
+.title-bar {
+  -webkit-app-region: drag;
+  background-color: #002644;
+  height: 60px;
+  color: #FCFCFC;
+}
+
+.title-logo {
+  font-weight: bold;
+  padding: 0 40px 0 40px;
+  width: 170px;
+}
+
+.title-version {
+  opacity: 60%;
+}

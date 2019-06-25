@@ -1,51 +1,51 @@
 {
-  "name": "ng-electron1",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "electron:dev": "concurrently \"yarn start\"  \"cd my-electron && yarn start:dev\"",
-    "electron:build": "yarn build --base-href ./ && cd my-electron && yarn start:dev",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+  "name": "papyrus-ui",
+  "productName": "Papyrus UI",
+  "version": "0.1.0",
+  "description": "The Localizer Application For Cross Platform Mobile Development.",
+  "license": "MIT",
+  "author": {
+    "name": "Rawipon Srivibha",
+    "email": "the.solar.space@gmail.com"
   },
-  "private": true,
   "dependencies": {
-    "@angular/animations": "~7.2.0",
-    "@angular/common": "~7.2.0",
-    "@angular/compiler": "~7.2.0",
-    "@angular/core": "~7.2.0",
-    "@angular/forms": "~7.2.0",
-    "@angular/platform-browser": "~7.2.0",
-    "@angular/platform-browser-dynamic": "~7.2.0",
-    "@angular/router": "~7.2.0",
-    "core-js": "^2.5.4",
-    "rxjs": "~6.3.3",
-    "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
+    "classnames": "^2.2.6",
+    "cross-env": "5.1.6",
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.6",
+    "primeicons": "^1.0.0",
+    "primereact": "^3.1.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-transition-group": "^4.1.1",
+    "update-electron-app": "^1.2.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.0",
-    "@angular/cli": "~7.3.1",
-    "@angular/compiler-cli": "~7.2.0",
-    "@angular/language-service": "~7.2.0",
-    "@types/jasmine": "~2.8.8",
-    "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~8.9.4",
-    "codelyzer": "~4.5.0",
-    "concurrently": "^4.1.0",
-    "jasmine-core": "~2.99.1",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~3.1.1",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~2.0.1",
-    "karma-jasmine": "~1.1.2",
-    "karma-jasmine-html-reporter": "^0.2.2",
-    "protractor": "~5.4.0",
-    "ts-node": "~7.0.0",
-    "tslint": "~5.11.0",
-    "typescript": "~3.2.2"
+    "concurrently": "3.5.1",
+    "electron": "2.0.2",
+    "electron-builder": "^20.15.1",
+    "prettier": "^1.4.4",
+    "react-scripts": "1.1.4",
+    "wait-on": "2.1.0"
+  },
+  "build": {
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
   }
 }
