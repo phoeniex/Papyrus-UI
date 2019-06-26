@@ -9,12 +9,11 @@
     "email": "the.solar.space@gmail.com"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
+    "@material-ui/core": "^4.1.3",
+    "@material-ui/icons": "^4.2.1",
     "cross-env": "5.1.6",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.6",
-    "primeflex": "^1.0.0-rc.1",
-    "primeicons": "^1.0.0",
     "primereact": "^3.1.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

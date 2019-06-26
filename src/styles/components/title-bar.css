@@ -4,19 +4,41 @@
   padding: 13px 40px;
   height: 60px;
   color: #FCFCFC;
+  align-items: center;
+  margin: 0;
 }
 
 .title-logo-col {
-  width: 160px;
+  width: 190px;
   text-align: center;
 }
 
 .title-logo {
+  font-size: 20px;
   font-weight: bold;
 }
 
 .title-version {
+  font-size: 8px;
   opacity: 0.60;
+}
+
+.title-project-col {
+  align-items: center;
+  display: flex;
+}
+
+.title-project-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+}
+
+.title-project-name {
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-flex;
 }
 
 .title-search-col {
