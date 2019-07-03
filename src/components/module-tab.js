@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 
 const ModuleTabs = withStyles({
   indicator: {
-    backgroundColor: 'transparent'
+    display: 'none'
   },
 })(props => <Tabs {...props} />);
 
@@ -17,14 +17,23 @@ const ModuleTab = withStyles(theme => ({
     fontSize: theme.typography.pxToRem(14),
     marginRight: theme.spacing(1),
     opacity: 0.6,
+    borderRadius: 4,
+    transition: 'all .5s',
+    padding: 10,
+    height: 'auto',
+    margin: 10,
+    minWidth: 0,
     '&:hover': {
       opacity: 1,
     },
     '&$selected': {
-      fontWeight: theme.typography.fontWeightMedium,
-      textDecoration: 'underline dashed #1CA7EC',
-      opacity: 1,
-    },
+      '&, &:hover': {
+        color: 'white',
+        backgroundColor: '#1CA7EC',
+        boxShadow: '0 4px 10px rgba(28, 167, 236, 0.4)',
+        opacity: 1,
+      }
+    }
   },
   selected: {},
 }))(props => <Tab disableRipple {...props} />);
