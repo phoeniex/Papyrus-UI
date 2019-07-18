@@ -37,8 +37,8 @@ export default function SearchInputField() {
       <IconButton
         className={classes.iconButton}
         size='small'
-        disableFocusRipple='true'
-        disableRipple='true'
+        disableFocusRipple={true}
+        disableRipple={true}
         aria-label='Clear'>
         <CloseRounded className={classes.svgIcon} fontSize='small' />
       </IconButton>
