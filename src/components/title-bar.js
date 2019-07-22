@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import SearchInputField from './search-input-field';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,44 +7,39 @@ import EditRounded from '@material-ui/icons/EditRounded';
 
 const {app} = window.require('electron').remote;
 
-class TitleBar extends Component {
-  constructor() {
-    super();
-    this.state = {
-        brandSuggestions: null
-    };
-    this.projectName = 'Digital Travel US';
-    this.projectLogoImageLocation = require('./../images/icon-project-default.png');
-    this.brands = ['Audi', 'BMW', 'Fiat', 'Ford', 'Honda', 'Jaguar', 'Mercedes', 'Renault', 'Volvo'];
-  }
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: '#004DC2',
+    padding: '13px 54px',
+    height: 60,
+    color: '#FCFCFC',
+    alignItems: 'center',
+    margin: 0,
+  },
 
-  suggestBrands(event) {
-      let results = this.brands.filter((brand) => {
-          return brand.toLowerCase().startsWith(event.query.toLowerCase());
-      });
-      this.setState({ brandSuggestions: results });
-  }
+}));
 
-  render() {
-    return (
-      <Grid container className='title-bar' direction="row" justify="space-between" alignItems="center">
-        <Grid item className='title-logo-col'>
-          <div className='title-logo' id='title-logo'>PAPYRUS</div>
-          <div className="title-version" id="title-version">V {app.getVersion()}</div>
-        </Grid>
-        <Grid item className='title-project-col'>
-          <img className='title-project-icon' id='title-project-icon' src={this.projectLogoImageLocation} alt="Project Logo" />
-          <span className='title-project-name' id='title-project-name'>{this.projectName}</span>
-          <IconButton size='small'>
-            <EditRounded fontSize='small' htmlColor='#FCFCFC' />
-          </IconButton>
-        </Grid>
-        <Grid item className="title-search-col">
-          <SearchInputField defaultValue="Search For Screen or String" id="titile-search-input" />
-        </Grid>
+export default function TitleBar() {
+  const classes = useStyles();
+  const projectName = 'Digital Travel US';
+  const projectLogoImageLocation = require('./../images/icon-project-default.png');
+
+  return (
+    <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
+      <Grid item className='title-logo-col'>
+        <div className='title-logo' id='title-logo'>PAPYRUS</div>
+        <div className="title-version" id="title-version">V {app.getVersion()}</div>
       </Grid>
-    )
-  }
+      <Grid item className='title-project-col'>
+        <img className='title-project-icon' id='title-project-icon' src={projectLogoImageLocation} alt="Project Logo" />
+        <span className='title-project-name' id='title-project-name'>{projectName}</span>
+        <IconButton size='small'>
+          <EditRounded fontSize='small' htmlColor='#FCFCFC' />
+        </IconButton>
+      </Grid>
+      <Grid item className="title-search-col">
+        <SearchInputField defaultValue="Search For Screen or String" id="titile-search-input" />
+      </Grid>
+    </Grid>
+  )
 }
-
-export default TitleBar;

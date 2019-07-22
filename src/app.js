@@ -54,7 +54,7 @@ export default function App() {
         <TitleBar/>
         <ModuleTabs/>
         <p className={classes.versionLabel}>
-          <b> Release 0.2.7 </b>
+          <b> Electron: {process.versions.electron}  </b>
           Version: {app.getVersion()}
         </p>
       </ThemeProvider>
