@@ -3,12 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
-import match from 'autosuggest-highlight/match';
-import parse from 'autosuggest-highlight/parse';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
+import { match } from 'autosuggest-highlight/match';
+import { parse } from 'autosuggest-highlight/parse';
+import { InputBase, IconButton, Paper, MenuItem } from '@material-ui/core';
 import { SearchRounded, CloseRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
@@ -16,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     padding: '2px 12px',
     display: 'flex',
     alignItems: 'center',
-    width: 260,
+    width: '100%',
     flexGrow: 1,
   },
   input: {
@@ -48,7 +45,6 @@ const useStyles = makeStyles(theme => ({
   suggestion: {
     display: 'block',
     color: '#2F2F2F',
-    fontSize: 12,
   },
   suggestionsList: {
     margin: 0,
@@ -103,7 +99,7 @@ function renderInputComponent(inputProps) {
       <InputBase
         className={classes.input}
         placeholder="Search For Any Screen or String "
-        InputProps={{
+        inputprops={{
           inputRef: node => {
             ref(node);
             inputRef(node);
@@ -129,7 +125,7 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
     <MenuItem selected={isHighlighted} component="div">
       <div>
         {parts.map(part => (
-          <span key={part.text}>
+          <span key={part.text} style={{ fontWeight: part.highlight ? 500 : 400, fontSize: 12 }}>
             {part.text}
           </span>
         ))}
@@ -161,7 +157,7 @@ function getSuggestionValue(suggestion) {
   return suggestion.label;
 }
 
-export default function SearchInputField() {
+export const SearchInputField = (props) => {
   const classes = useStyles();
   const [state, setState] = React.useState('');
   const [stateSuggestions, setSuggestions] = React.useState([]);

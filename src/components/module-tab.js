@@ -1,9 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AddRounded, SortRounded } from '@material-ui/icons'
-import Button from '@material-ui/core/Button';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { Button, Tabs, Tab }  from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     fontSize: 14,
+    cursor: 'pointer',
     marginRight: theme.spacing(1),
   }
 }));
@@ -66,34 +66,27 @@ const useTabStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ModuleTabs() {
-  const [value, setValue] = React.useState(0);
+export const ModuleTabs = (props) => {
+  console.log('ID: ', props.moduleId)
+  const [value, setValue] = React.useState(props.moduleId || 0);
   const classes = useStyles();
   const tabsClasses = useTabsStyles();
   const tabClasses = useTabStyles();
+
   const tabs = [
-    {label: 'Test 1'},
-    {label: 'Test 2'},
-    {label: 'Test 3'},
-    {label: 'Test 4'},
-    {label: 'Test 5'},
-    {label: 'Test 6'},
-    {label: 'Test 7'},
-    {label: 'Test 8'},
-    {label: 'Test 9'},
-    {label: 'Test 10'},
-    {label: 'Test 11'},
-    {label: 'Test 12'},
-    {label: 'Test 13'},
-    {label: 'Test 14'},
-    {label: 'Test 15'},
-    {label: 'Test 16'},
-    {label: 'Test 17'},
-    {label: 'Test 18'},
-    {label: 'Test 19'},
-    {label: 'Test 20'},
-    {label: 'Test 21'},
-    {label: 'Test 22'},
+    {label: 'Test 1', to: '/module/0'},
+    {label: 'Test 2', to: '/module/1'},
+    {label: 'Test 3', to: '/module/2'},
+    {label: 'Test 4', to: '/module/3'},
+    {label: 'Test 5', to: '/module/4'},
+    {label: 'Test 6', to: '/module/5'},
+    {label: 'Test 7', to: '/module/6'},
+    {label: 'Test 8', to: '/module/7'},
+    {label: 'Test 9', to: '/module/8'},
+    {label: 'Test 10', to: '/module/9'},
+    {label: 'Test 11', to: '/module/10'},
+    {label: 'Test 12', to: '/module/11'},
+    {label: 'Test 13', to: '/module/12'},
   ];
 
   function handleChange(event, newValue) {
@@ -104,7 +97,7 @@ export default function ModuleTabs() {
     <div className={classes.root}>
       <Tabs value={value} onChange={handleChange} classes={tabsClasses} variant='scrollable' scrollButtons='desktop' indicatorColor='primary'>
         {tabs.map(tab => (
-          <Tab classes={tabClasses} disableRipple={true} key={tab.label} {...tab} />
+          <Tab classes={tabClasses} disableRipple key={tab.label} component={Link} {...tab} />
         ))}
       </Tabs>
       <Button variant='outlined' className={classes.otherButton}><AddRounded className={classes.icon}/>Add New Group</Button>
