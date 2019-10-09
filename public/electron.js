@@ -21,7 +21,10 @@ function createWindow() {
     minHeight: 720,
     title: app.getName(),
     backgroundColor: '#FCFCFC',
-    titleBarStyle: "hiddenInset" });
+    titleBarStyle: "hiddenInset",
+    webPreferences: {
+      nodeIntegration: true
+    }});
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'

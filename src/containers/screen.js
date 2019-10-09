@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TitleBar } from '../components/title-bar';
 import { ScreenContainer } from './screen-container';
 import { AppBar, Typography } from '@material-ui/core';
-
 const { app } = window.require('electron').remote;
 
 const useStyles = makeStyles(theme => ({
