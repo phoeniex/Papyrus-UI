@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
     fontStyle: 'italic',
     color: 'rgba(47, 47, 47, 0.6)',
   },
-
 }));
 
 export const ScreenCard = (props) => {
@@ -48,8 +47,8 @@ export const ScreenCard = (props) => {
         </Link>
       </Paper>
       <span className={classes.screenDetailItem}>
-        <Typography className={classes.screenName}>Policy Test</Typography>
-        <Typography className={classes.screenDetail}>23 words</Typography>
+        <Typography className={classes.screenName}>{props.name}</Typography>
+        <Typography className={classes.screenDetail}>{props.localizedCount} words</Typography>
       </span>
     </Box>
   );

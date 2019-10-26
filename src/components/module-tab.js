@@ -1,9 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AddRounded, SortRounded } from '@material-ui/icons'
-import { Button, Tabs, Tab }  from '@material-ui/core';
+import { Button, Tabs, Tab, Dialog, DialogActions, DialogContent, TextField, DialogTitle }  from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
+const { ipcRenderer } = window.require('electron')
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -66,42 +67,91 @@ const useTabStyles = makeStyles(theme => ({
   },
 }));
 
-export const ModuleTabs = (props) => {
-  console.log('ID: ', props.moduleId)
-  const [value, setValue] = React.useState(props.moduleId || 0);
-  const classes = useStyles();
-  const tabsClasses = useTabsStyles();
-  const tabClasses = useTabStyles();
 
-  const tabs = [
-    {label: 'Test 1', to: '/module/0'},
-    {label: 'Test 2', to: '/module/1'},
-    {label: 'Test 3', to: '/module/2'},
-    {label: 'Test 4', to: '/module/3'},
-    {label: 'Test 5', to: '/module/4'},
-    {label: 'Test 6', to: '/module/5'},
-    {label: 'Test 7', to: '/module/6'},
-    {label: 'Test 8', to: '/module/7'},
-    {label: 'Test 9', to: '/module/8'},
-    {label: 'Test 10', to: '/module/9'},
-    {label: 'Test 11', to: '/module/10'},
-    {label: 'Test 12', to: '/module/11'},
-    {label: 'Test 13', to: '/module/12'},
-  ];
+
+export const ModuleTabs = (props) => {
+  const [value, setValue] = React.useState(props.moduleId || 0)
+  const [tabs, setTabs] = React.useState([])
+  const [addDialogOpen, setAddDialogOpen] = React.useState(false)
+  const [moduleName, setModuleName] = React.useState('')
+  const classes = useStyles()
+  const tabsClasses = useTabsStyles()
+  const tabClasses = useTabStyles()
+
+  registerListener()
 
   function handleChange(event, newValue) {
+    console.log('Tab ID:' + newValue)
     setValue(newValue);
   }
 
-  return (
-    <div className={classes.root}>
-      <Tabs value={value} onChange={handleChange} classes={tabsClasses} variant='scrollable' scrollButtons='desktop' indicatorColor='primary'>
+  function handleClickAdd() {
+    console.log('Module Name:' + moduleName)
+    ipcRenderer.send('add-module', moduleName)
+    setAddDialogOpen(false)
+  }
+
+  const handleClickOpen = () => {
+    setAddDialogOpen(true)
+  }
+
+  const handleModuleNameChange = () => event => {
+    console.log('Module Name:' + event.target.value)
+    setModuleName(event.target.value)
+  }
+
+  const handleClickClose = () => {
+    setAddDialogOpen(false)
+  }
+
+  function registerListener() {
+    ipcRenderer.on('update-module-tab-bar', (event, modules) => {
+      console.log('Update Tab Names')
+
+      let tempTabs = [];
+      console.log(modules)
+      modules.forEach( (module, index) => {
+        tempTabs.push({label: module['name'], to: '/module/' + index, key: module['name'] + '-' + index })
+      })
+
+      setTabs(tempTabs)
+    })
+  }
+
+  function ModuleTabContainer(props) {
+    if (tabs.length > 0) {
+      return <Tabs value={value} onChange={handleChange} classes={tabsClasses} variant='scrollable' scrollButtons='desktop' indicatorColor='primary'>
         {tabs.map(tab => (
-          <Tab classes={tabClasses} disableRipple key={tab.label} component={Link} {...tab} />
+          <Tab classes={tabClasses} disableRipple component={Link} {...tab} />
         ))}
       </Tabs>
-      <Button variant='outlined' className={classes.otherButton}><AddRounded className={classes.icon}/>Add New Group</Button>
-      <Button variant='outlined' className={classes.otherButton}><SortRounded className={classes.icon}/>Sort By Date ▲</Button>
+    }
+    return null
+  }
+
+  return (
+    <div id='moduleTabs' className={classes.root}>
+      <ModuleTabContainer/>
+      <Button variant='outlined' className={classes.otherButton} onClick={handleClickOpen}><AddRounded className={classes.icon}/>Add New Module</Button>
+      <Button variant='outlined' className={classes.otherButton}><SortRounded className={classes.icon}/>Sort By Date  ▲</Button>
+      <Dialog open={addDialogOpen} onClose={handleClickClose}>
+        <DialogTitle id="formDialogTitle">Add New Module</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin='dense'
+            id='moduleName'
+            label='Module Name'
+            value={moduleName}
+            onChange={handleModuleNameChange()}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClickClose} color='primary'>Cancel</Button>
+          <Button onClick={handleClickAdd} color='primary'>Add</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

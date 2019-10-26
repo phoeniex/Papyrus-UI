@@ -1,43 +1,54 @@
 {
-    version: "1.0",
-    project: {
-        name: "Digital Trave",
-        icon: "",
-        languages: ["US"]
-        models: [{
-            name: "Policy",
-            screens: [{
-                name: "List",
-                image: "",
-                localizes: [
-                    {key: "test_key_1", values: ["Value"]},
-                    {key: "test_key_2", values: ["Value"]},
-                    {key: "test_key_3", values: ["Value"]}
-                ]
-            }]
-        },
-        {
-            name: "Claim",
-            screens: [{
-                name: "List",
-                image: "",
-                localizes: [
-                    {key: "test_key_1", values: ["Value"]},
-                    {key: "test_key_2", values: ["Value"]},
-                    {key: "test_key_3", values: ["Value"]}
-                ]
-            },
-            {
-                name: "Detail",
-                image: "",
-                localizes: [
-                    {key: "test_key_1", values: ["Value"]},
-                    {key: "test_key_2", values: ["Value"]},
-                    {key: "test_key_3", values: ["Value"]}
-                ]
-            },
-            ]
-        }
-        ]
-    }
+  "version": "1.0",
+  "project": {
+    "name": "Digital Trave",
+    "icon": "",
+    "languages": ["US"],
+    "modules": [{
+      "name": "Policy",
+      "screens": [{
+        "name": "List",
+        "image": "",
+        "localizes": [{
+          "key": "test_key_1",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_2",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_3",
+          "values": ["Value"]
+        }]
+      }]
+    }, {
+      "name": "Claim",
+      "screens": [{
+        "name": "List",
+        "image": "",
+        "localizes": [{
+          "key": "test_key_1",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_2",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_3",
+          "values": ["Value"]
+        }]
+      }, {
+        "name": "Detail",
+        "image": "",
+        "localizes": [{
+          "key": "test_key_1",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_2",
+          "values": ["Value"]
+        }, {
+          "key": "test_key_3",
+          "values": ["Value"]
+        }]
+      }]
+    }]
+  }
 }

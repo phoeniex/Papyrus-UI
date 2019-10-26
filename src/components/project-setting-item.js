@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Typography, InputAdornment, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { SaveStore } from '../store/save-store';
 
 const { dialog, nativeImage } = window.require('electron').remote
 const useStyles = makeStyles(theme => ({
@@ -93,15 +92,13 @@ export const ProjectSettingItem = (props) => {
   }
 
   function handleClickFileOpen() {
-      dialog.showOpenDialog({ filters: [ {name: 'Images', extensions: ['png']} ] }, (files) => {
+      dialog.showOpenDialog({ filters: [ {name: 'Image File', extensions: ['png']} ] }, (files) => {
         if(files !== undefined) {
-          // let image = nativeImage.createFromPath(files[0]).resize({width: 36, height: 36, quality: 'best'})
-          // var projectIcon = document.getElementById('title-project-icon-preview')
-          // projectIcon.src = image.toDataURL()
-          SaveStore(files[0])
+          let image = nativeImage.createFromPath(files[0]).resize({width: 36, height: 36, quality: 'best'})
+          var projectIcon = document.getElementById('title-project-icon-preview')
+          projectIcon.src = image.toDataURL()
         }
       })
-
   }
 
   function ModuleName(props) {

@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { ScreenCard } from '../components/screen-card';
 
+const { ipcRenderer } = window.require('electron')
+
 const useStyles = makeStyles(theme => ({
   root: {
     top: 128,
@@ -37,30 +39,57 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
+ipcRenderer.on('update-module-container', (event, modules) => {
+  console.log('Update Tab Container')
+  // const classes = useStyles();
+  // var moduleContainer = document.getElementById('moduleContainer');
+  // let innerHTML = ''
+
+  // modules.forEach( (module, index) => {
+  //   innerHTML += '<TabPanel className=' + classes.root + ' value=' + moduleContainer.getAttribute('moduleid') + 'index=' + index + '>'
+  //   innerHTML += '</TabPanel>'
+  // })
+
+  // moduleContainer.innerHTML = innerHTML
+})
+
 export const ModuleContainer = (props) => {
-  const classes = useStyles();
   const moduleId = props.moduleId || 0
-console.log('moduleId' + moduleId)
+  const classes = useStyles();
+  const [tabs, setTabs] = React.useState([]);
+
+  console.log('Container ID:' + moduleId)
+  registerListener()
+
+  function registerListener() {
+    ipcRenderer.on('update-module-container', (event, modules) => {
+      console.log('Update Tab Container')
+
+      let tempTabs = []
+      modules.forEach( (module, index) => {
+        let tempScreens = []
+        module.screens.forEach( (screen, subIndex) => {
+          tempScreens.push({key: index + '-' + subIndex, image: screen.image, name: screen.name, localizedCount: screen.localizes.length})
+        })
+
+        tempTabs.push({id: index, screens: tempScreens})
+      })
+
+      console.log(tempTabs)
+      setTabs(tempTabs)
+    })
+  }
+
   return (
-    <React.Fragment>
-      <TabPanel className={classes.root} value={moduleId} index={0}>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-      </TabPanel>
-      <TabPanel className={classes.root} value={moduleId} index={1}>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-        <ScreenCard/>
-      </TabPanel>
-      <TabPanel className={classes.root} value={moduleId} index={2}>
-      </TabPanel>
-    </React.Fragment>
+    <div moduleid={moduleId} id='moduleContainer'>
+      {tabs.map(tab => (
+        <TabPanel className={classes.root} key={tab.id} value={moduleId} index={tab.id}>
+          {tab.screens.map(screen => (
+            <ScreenCard {...screen}/>
+          ))}
+        </TabPanel>
+      ))}
+    </div>
   );
 }
 
