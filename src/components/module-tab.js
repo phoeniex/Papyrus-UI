@@ -2,9 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AddRounded, SortRounded } from '@material-ui/icons'
 import { Button, Tabs, Tab, Dialog, DialogActions, DialogContent, TextField, DialogTitle }  from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 const { ipcRenderer } = window.require('electron')
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -26,8 +26,12 @@ const useStyles = makeStyles(theme => ({
     fontSize: 14,
     cursor: 'pointer',
     marginRight: theme.spacing(1),
-  }
-}));
+  },
+  dialogButton: {
+    fontSize: 14,
+    textTransform: 'none',
+  },
+}))
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +45,7 @@ const useTabsStyles = makeStyles(theme => ({
     borderRadius: 4,
     margin: theme.spacing(0.5),
   }
-}));
+}))
 
 const useTabStyles = makeStyles(theme => ({
   root: {
@@ -65,64 +69,49 @@ const useTabStyles = makeStyles(theme => ({
       boxShadow: '0px 2px 8px 0px #004DC2',
     },
   },
-}));
-
-
+}))
 
 export const ModuleTabs = (props) => {
-  const [value, setValue] = React.useState(props.moduleId || 0)
-  const [tabs, setTabs] = React.useState([])
   const [addDialogOpen, setAddDialogOpen] = React.useState(false)
-  const [moduleName, setModuleName] = React.useState('')
+  const [newModuleName, setNewModuleName] = React.useState('')
   const classes = useStyles()
   const tabsClasses = useTabsStyles()
   const tabClasses = useTabStyles()
 
-  registerListener()
-
-  function handleChange(event, newValue) {
+  function handleTabChange(event, newValue) {
     console.log('Tab ID:' + newValue)
-    setValue(newValue);
+    props.setPageMode({mode: 'module', id: newValue, moduleId: undefined})
   }
 
-  function handleClickAdd() {
-    console.log('Module Name:' + moduleName)
-    ipcRenderer.send('add-module', moduleName)
+  function handleClickAddNewModule() {
+    console.log('Module Name:' + newModuleName)
+    ipcRenderer.send('add-module', newModuleName)
     setAddDialogOpen(false)
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpenNewModule = () => {
     setAddDialogOpen(true)
   }
 
   const handleModuleNameChange = () => event => {
     console.log('Module Name:' + event.target.value)
-    setModuleName(event.target.value)
+    setNewModuleName(event.target.value)
   }
 
-  const handleClickClose = () => {
+  const handleClickCloseNewModule = () => {
     setAddDialogOpen(false)
   }
 
-  function registerListener() {
-    ipcRenderer.on('update-module-tab-bar', (event, modules) => {
-      console.log('Update Tab Names')
-
-      let tempTabs = [];
-      console.log(modules)
-      modules.forEach( (module, index) => {
-        tempTabs.push({label: module['name'], to: '/module/' + index, key: module['name'] + '-' + index })
-      })
-
-      setTabs(tempTabs)
-    })
-  }
-
   function ModuleTabContainer(props) {
+    var tabs = []
+    props.modules.forEach( (module, index) => {
+      tabs.push({label: module['name'], to: '/module/' + index, key: module['name'] + '-' + index })
+    })
+
     if (tabs.length > 0) {
-      return <Tabs value={value} onChange={handleChange} classes={tabsClasses} variant='scrollable' scrollButtons='desktop' indicatorColor='primary'>
+      return <Tabs value={props.pageMode.id} onChange={handleTabChange} classes={tabsClasses} variant='scrollable' scrollButtons='desktop' indicatorColor='primary'>
         {tabs.map(tab => (
-          <Tab classes={tabClasses} disableRipple component={Link} {...tab} />
+          <Tab classes={tabClasses} disableRipple {...tab} />
         ))}
       </Tabs>
     }
@@ -131,10 +120,10 @@ export const ModuleTabs = (props) => {
 
   return (
     <div id='moduleTabs' className={classes.root}>
-      <ModuleTabContainer/>
-      <Button variant='outlined' className={classes.otherButton} onClick={handleClickOpen}><AddRounded className={classes.icon}/>Add New Module</Button>
+      <ModuleTabContainer modules={props.modules} pageMode={props.pageMode}/>
+      <Button variant='outlined' className={classes.otherButton} onClick={handleClickOpenNewModule}><AddRounded className={classes.icon}/>Add New Module</Button>
       <Button variant='outlined' className={classes.otherButton}><SortRounded className={classes.icon}/>Sort By Date  ▲</Button>
-      <Dialog open={addDialogOpen} onClose={handleClickClose}>
+      <Dialog open={addDialogOpen} onClose={handleClickCloseNewModule}>
         <DialogTitle id="formDialogTitle">Add New Module</DialogTitle>
         <DialogContent>
           <TextField
@@ -142,14 +131,16 @@ export const ModuleTabs = (props) => {
             margin='dense'
             id='moduleName'
             label='Module Name'
-            value={moduleName}
+            variant='outlined'
+            color='primary'
+            value={newModuleName}
             onChange={handleModuleNameChange()}
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClickClose} color='primary'>Cancel</Button>
-          <Button onClick={handleClickAdd} color='primary'>Add</Button>
+          <Button variant='outlined' onClick={handleClickCloseNewModule} className={classes.dialogButton} color='primary'>Cancel</Button>
+          <Button variant='contained' onClick={handleClickAddNewModule} className={classes.dialogButton} color='primary'>Add</Button>
         </DialogActions>
       </Dialog>
     </div>

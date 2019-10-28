@@ -1,7 +1,4 @@
 const Store = require('electron-store')
-const path = require('path')
-const electron = require('electron')
-const { app } = electron
 const fs = require('fs')
 
 const schema = {
@@ -77,6 +74,7 @@ class DataStore extends Store {
 
   clear() {
     this.clear()
+    this.savePath = null
   }
 
   addEmptyModule(moduleName) {
@@ -107,6 +105,11 @@ class DataStore extends Store {
     } else {
       this.set('project.modules', [testModules]);
     }
+  }
+
+  updateProjectSetting(projectSetting) {
+    if(projectSetting.name !== undefined) { this.set('project.name', projectSetting.name) }
+    if(projectSetting.icon !== undefined) { this.set('project.icon', projectSetting.icon) }
   }
 
   getProject() {

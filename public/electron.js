@@ -131,9 +131,7 @@ let saveAsFunction = () => {
 
 let sendUpdatedDataStore = () => {
   console.log('Sending Update...')
-  mainWindow.webContents.send('update-project', dataStore.getProject())
-  mainWindow.webContents.send('update-module-container', dataStore.getModules())
-  mainWindow.webContents.send('update-module-tab-bar', dataStore.getModules())
+  mainWindow.webContents.send('refresh-project', dataStore.getProject())
 }
 
 app.on('ready', createWindow);
@@ -155,4 +153,11 @@ ipcMain.on('add-module', (event, moduleName) => {
   console.log('Add Module :' + moduleName)
   dataStore.addEmptyModule(moduleName)
   sendUpdatedDataStore()
-});
+})
+
+ipcMain.on('update-project-setting', (event, projectSetting) => {
+  console.log('Update Project Setting')
+  console.log(projectSetting)
+  dataStore.updateProjectSetting(projectSetting)
+  sendUpdatedDataStore()
+})

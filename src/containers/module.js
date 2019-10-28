@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
 
 import { TitleBar } from '../components/title-bar';
-import { ScreenContainer } from './screen-container';
-import { AppBar, Typography } from '@material-ui/core';
-const { app } = window.require('electron').remote;
+import { ModuleTabs } from '../components/module-tab'
+import { ModuleContainer } from './module-container';
 
 const useStyles = makeStyles(theme => ({
   appRoot: {
@@ -28,17 +28,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const Screen = (props) => {
+export const Module = (props) => {
   const classes = useStyles();
 
   return (
     <div>
       <AppBar className={classes.appBar} position="fixed">
-        <TitleBar navigateBack project={props.project} pageMode={props.pageMode} setPageMode={props.setPageMode}/>
+        <TitleBar project={props.project} pageMode={props.pageMode}/>
+        <ModuleTabs modules={props.project.modules} pageMode={props.pageMode} setPageMode={props.setPageMode}/>
       </AppBar>
-      <ScreenContainer/>
-      <Typography><b> Electron: {process.versions.electron}</b></Typography>
-      <Typography>Version: {app.getVersion()}</Typography>
+      <ModuleContainer modules={props.project.modules} pageMode={props.pageMode} setPageMode={props.setPageMode}/>
     </div>
   );
 }

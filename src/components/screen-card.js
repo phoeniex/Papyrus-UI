@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Button, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,12 +38,15 @@ const useStyles = makeStyles(theme => ({
 export const ScreenCard = (props) => {
   const classes = useStyles();
 
+  const handleScreenClick = (event) => {
+    console.log('Link To Screen of Module: ' + props.moduleId)
+    props.setPageMode({mode: 'screen', id: props.screenId, moduleId: props.moduleId})
+  }
+
   return (
     <Box className={classes.root}>
       <Paper className={classes.screenImageItem}>
-        <Link to='/screen/test'>
-          <Button className={classes.screenImageButton}><img className={classes.screenImage} src={require('./../images/sample.png')} alt='Edit'/></Button>
-        </Link>
+        <Button className={classes.screenImageButton} onClick={handleScreenClick}><img className={classes.screenImage} src={require('./../images/sample.png')} alt='Edit'/></Button>
       </Paper>
       <span className={classes.screenDetailItem}>
         <Typography className={classes.screenName}>{props.name}</Typography>

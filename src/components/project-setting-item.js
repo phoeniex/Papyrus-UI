@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Typography, InputAdornment, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
+const { ipcRenderer } = window.require('electron')
 const { dialog, nativeImage } = window.require('electron').remote
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,24 +74,37 @@ const useStyles = makeStyles(theme => ({
     fontSize: 14,
     textTransform: 'none',
   },
-}));
+}))
 
 export const ProjectSettingItem = (props) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const projectName = 'Digital Travel US';
-  const projectLogoImageLocation = require('./../images/icon-project-default@2x.png');
-  const editIconLocation = require('./../images/icon-project-edit@2x.png');
+  const classes = useStyles()
+  const [openProjectSetting, setOpenProjectSetting] = React.useState(false)
+  const [newProjectSetting, setNewProjectSetting] = React.useState({name: props.project.name, icon: props.project.icon})
+  const projectLogoImageLocation = require('./../images/icon-project-default@2x.png')
+  const editIconLocation = require('./../images/icon-project-edit@2x.png')
 
-  function handleClickOpen() {
-    setOpen(true);
+  const handleClickOpenProjectSetting = () => {
+    setOpenProjectSetting(true)
   }
 
-  function handleClose() {
-    setOpen(false);
+  const handleUpdateProjectSetting = () => {
+    ipcRenderer.send('update-project-setting', newProjectSetting)
   }
 
-  function handleClickFileOpen() {
+  const handleCloseProjectSetting = () => {
+    setOpenProjectSetting(false)
+  }
+
+  const handleClickBack = (event) => {
+    console.log('Back: ' + props.pageMode.moduleId)
+    props.setPageMode({mode: 'module', id: props.pageMode.moduleId, moduleId: undefined})
+  }
+
+  const handleChangeProjectSetting = (key) => (event) => {
+    setNewProjectSetting({...newProjectSetting, [key]: event.target.value})
+  }
+
+  const handleClickFileOpen = () => {
       dialog.showOpenDialog({ filters: [ {name: 'Image File', extensions: ['png']} ] }, (files) => {
         if(files !== undefined) {
           let image = nativeImage.createFromPath(files[0]).resize({width: 36, height: 36, quality: 'best'})
@@ -102,39 +115,40 @@ export const ProjectSettingItem = (props) => {
   }
 
   function ModuleName(props) {
-    const moduleName = props.moduleName;
-
-    if(moduleName) {
-      return <Typography className={classes.moduleName} id='title-module-name'>― {moduleName}</Typography>;
+    if (props.pageMode.moduleId !== undefined) {
+      console.log('Module ID: ' + props.pageMode.moduleId)
+      const moduleName = props.project.modules[props.pageMode.moduleId].name || ''
+      return <Typography className={classes.moduleName} id='title-module-name'>― {moduleName}</Typography>
     }
-    return null;
+
+    return null
   }
 
   function DiscloseBack(props) {
-    const classes = useStyles();
-    const canNavigateBack = props.navigateBack;
-    const backButton = require('../images/icon-disclose-back@2x.png');
+    const classes = useStyles()
+    const canNavigateBack = props.navigateBack
+    const backButton = require('../images/icon-disclose-back@2x.png')
 
     if(canNavigateBack) {
-      return <Link to='/module/0'><Button className={classes.backButton}><img className={classes.backButtonIcon} src={backButton} alt='Back' /></Button></Link>;
+      return <Button className={classes.backButton} onClick={handleClickBack}><img className={classes.backButtonIcon} src={backButton} alt='Back' /></Button>
     }
 
-    return null;
+    return null
   }
 
   return (
     <div className={classes.root}>
-      <DiscloseBack navigateBack={props.navigateBack}/>
+      <DiscloseBack navigateBack={props.navigateBack} pageMode={props.pageMode}/>
       <img className={classes.icon} id='title-project-icon' src={projectLogoImageLocation} alt="Project Logo" />
-      <Typography className={classes.projectName} id='title-project-name'>{projectName}</Typography>
-      <ModuleName moduleName={props.moduleName} />
-      <IconButton className={classes.editButton} onClick={handleClickOpen}>
-        <img className={classes.editButtonIcon} src={editIconLocation} alt="Edit Icon" />
+      <Typography className={classes.projectName} id='title-project-name'>{props.project.name}</Typography>
+      <ModuleName project={props.project} pageMode={props.pageMode}/>
+      <IconButton className={classes.editButton} onClick={handleClickOpenProjectSetting}>
+        <img className={classes.editButtonIcon} src={editIconLocation} alt="Edit Icon"/>
       </IconButton>
-      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title' disableBackdropClick>
+      <Dialog open={openProjectSetting} onClose={handleCloseProjectSetting} aria-labelledby='form-dialog-title' disableBackdropClick>
         <DialogTitle id='form-dialog-title'>Project Information</DialogTitle>
         <DialogContent className={classes.dialogItems}>
-          <TextField className={classes.dialogName} variant='outlined' id='name' label='Project Detail' helperText='Tap on Icon to change it.' color='primary' fullWidth InputProps={{
+          <TextField className={classes.dialogName} variant='outlined' id='name' value={newProjectSetting.name} onChange={handleChangeProjectSetting('name')} label='Project Detail' helperText='Tap on Icon to change it.' color='primary' fullWidth InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <Button className={classes.previewEditButton} onClick={handleClickFileOpen}>
@@ -147,8 +161,8 @@ export const ProjectSettingItem = (props) => {
           <TextField className={classes.dialogName} variant='outlined' id='name' label='Version' color='primary' />
         </DialogContent>
         <DialogActions>
-          <Button className={classes.dialogButton} variant='outlined' onClick={handleClose} color='primary'>Cancel</Button>
-          <Button className={classes.dialogButton} variant='contained' onClick={handleClose} color='primary'>Update</Button>
+          <Button className={classes.dialogButton} variant='outlined' onClick={handleCloseProjectSetting} color='primary'>Cancel</Button>
+          <Button className={classes.dialogButton} variant='contained' onClick={handleUpdateProjectSetting} color='primary'>Update</Button>
         </DialogActions>
       </Dialog>
     </div>

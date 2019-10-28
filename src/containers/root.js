@@ -1,44 +1,34 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import React from 'react'
 
-import { TitleBar } from '../components/title-bar';
-import { ModuleTabs } from '../components/module-tab'
-import { ModuleContainer } from './module-container';
+import { Module } from './module'
+import { Screen } from './screen'
 
-const useStyles = makeStyles(theme => ({
-  appRoot: {
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    backgroundColor: '#FCFCFC',
-  },
-  appBar: {
-    backgroundColor: '#FCFCFC',
-    boxShadow: 'none',
-  },
-}));
+const { ipcRenderer } = window.require('electron')
 
 export const Root = (props) => {
-  const classes = useStyles();
-  const id = parseInt(props.match.params.id, 10);
+  const [project, setProject] = React.useState({name: 'New Project', modules: []});
+  const [pageMode, setPageMode] = React.useState({mode: 'module', id: 0, moduleId: undefined});
+  registerListener()
+
+  function registerListener() {
+    ipcRenderer.on('refresh-project', (event, project) => {
+      console.log('Refresh Project...')
+
+      console.log(project)
+      setProject(project)
+    })
+  }
+
+  function Routing() {
+    console.log('Page Mode: ' + pageMode.mode + ' ' + pageMode.id + ' ' + pageMode.moduleId)
+    if (pageMode.mode === 'module') {
+      return <Module project={project} pageMode={pageMode} setPageMode={setPageMode}/>
+    } else if(pageMode.mode === 'screen') {
+      return <Screen project={project} pageMode={pageMode} setPageMode={setPageMode}/>
+    }
+  }
 
   return (
-    <div>
-      <AppBar className={classes.appBar} position="fixed">
-        <TitleBar/>
-        <ModuleTabs moduleId={id} />
-      </AppBar>
-      <ModuleContainer moduleId={id} />
-    </div>
+    <Routing/>
   );
 }

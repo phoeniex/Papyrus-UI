@@ -46,7 +46,7 @@ export const TitleBar = (props) => {
         <Typography className={classes.version} id='title-version'>V {app.getVersion()}</Typography>
       </Grid>
       <Grid item>
-        <ProjectSettingItem navigateBack={props.navigateBack} moduleName={props.moduleName}/>
+        <ProjectSettingItem navigateBack={props.navigateBack} project={props.project} pageMode={props.pageMode} setPageMode={props.setPageMode}/>
       </Grid>
       <Grid item className={classes.searchItem}>
         <SearchInputField defaultValue="Search For Screen or String" id="titile-search-input" />
