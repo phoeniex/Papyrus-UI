@@ -1,9 +1,10 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { TextField, Typography, InputAdornment, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 
 const { ipcRenderer } = window.require('electron')
 const { dialog, nativeImage } = window.require('electron').remote
+
 const useStyles = makeStyles(theme => ({
   root: {
     alignItems: 'center',
@@ -14,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     height: 36,
     margin: 0,
     display: 'inline-flex',
+    borderRadius: 6,
   },
   iconButton: {
     padding: 2,
@@ -50,13 +52,12 @@ const useStyles = makeStyles(theme => ({
     display: 'inline-flex',
   },
   moduleName: {
-    padding: '0 4px 0 4px',
+    padding: '0 4px 0 2px',
     fontSize: 14,
     fontWeight: 300,
     color: 'rgba(252, 252, 252, 0.6)',
     display: 'inline-flex',
   },
-
   previewEditButton: {
     padding: 0,
     minWidth: 36,
@@ -80,9 +81,10 @@ export const ProjectSettingItem = (props) => {
   const classes = useStyles()
   const [openProjectSetting, setOpenProjectSetting] = React.useState(false)
   const [newProjectSetting, setNewProjectSetting] = React.useState({name: props.project.name, icon: props.project.icon})
-  const projectLogoImageLocation = require('./../images/icon-project-default@2x.png')
-  const editIconLocation = require('./../images/icon-project-edit@2x.png')
-
+  const projectLogoImageLocation = props.project.icon || require('./../images/icon-project-default.png')
+  const projectLogoImageLocation2x = props.project.icon || require('./../images/icon-project-default@2x.png')
+  const editIconLocation = require('./../images/icon-project-edit.png')
+  const editIconLocation2x = require('./../images/icon-project-edit@2x.png')
   const handleClickOpenProjectSetting = () => {
     setOpenProjectSetting(true)
   }
@@ -107,9 +109,11 @@ export const ProjectSettingItem = (props) => {
   const handleClickFileOpen = () => {
       dialog.showOpenDialog({ filters: [ {name: 'Image File', extensions: ['png']} ] }, (files) => {
         if(files !== undefined) {
-          let image = nativeImage.createFromPath(files[0]).resize({width: 36, height: 36, quality: 'best'})
+          let image = nativeImage.createFromPath(files[0]).resize({width: 72, height: 72, quality: 'best'})
           var projectIcon = document.getElementById('title-project-icon-preview')
-          projectIcon.src = image.toDataURL()
+          var imageData = image.toDataURL()
+          projectIcon.src = imageData
+          setNewProjectSetting({...newProjectSetting, 'icon': imageData})
         }
       })
   }
@@ -127,10 +131,13 @@ export const ProjectSettingItem = (props) => {
   function DiscloseBack(props) {
     const classes = useStyles()
     const canNavigateBack = props.navigateBack
-    const backButton = require('../images/icon-disclose-back@2x.png')
+    const backButton = require('../images/icon-disclose-back.png')
+    const backButton2x = require('../images/icon-disclose-back@2x.png')
 
     if(canNavigateBack) {
-      return <Button className={classes.backButton} onClick={handleClickBack}><img className={classes.backButtonIcon} src={backButton} alt='Back' /></Button>
+      return <Button className={classes.backButton} onClick={handleClickBack}>
+        <img className={classes.backButtonIcon} src={backButton} srcSet={backButton2x + ' 2x'} alt='Back' />
+      </Button>
     }
 
     return null
@@ -139,11 +146,11 @@ export const ProjectSettingItem = (props) => {
   return (
     <div className={classes.root}>
       <DiscloseBack navigateBack={props.navigateBack} pageMode={props.pageMode}/>
-      <img className={classes.icon} id='title-project-icon' src={projectLogoImageLocation} alt="Project Logo" />
+      <img className={classes.icon} id='title-project-icon' src={projectLogoImageLocation} srcSet={projectLogoImageLocation2x + ' 2x'} alt="Project Logo" />
       <Typography className={classes.projectName} id='title-project-name'>{props.project.name}</Typography>
       <ModuleName project={props.project} pageMode={props.pageMode}/>
       <IconButton className={classes.editButton} onClick={handleClickOpenProjectSetting}>
-        <img className={classes.editButtonIcon} src={editIconLocation} alt="Edit Icon"/>
+        <img className={classes.editButtonIcon} src={editIconLocation} srcSet={editIconLocation2x + ' 2x'} alt="Edit Icon"/>
       </IconButton>
       <Dialog open={openProjectSetting} onClose={handleCloseProjectSetting} aria-labelledby='form-dialog-title' disableBackdropClick>
         <DialogTitle id='form-dialog-title'>Project Information</DialogTitle>

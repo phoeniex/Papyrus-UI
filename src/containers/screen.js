@@ -36,7 +36,7 @@ export const Screen = (props) => {
       <AppBar className={classes.appBar} position="fixed">
         <TitleBar navigateBack project={props.project} pageMode={props.pageMode} setPageMode={props.setPageMode}/>
       </AppBar>
-      <ScreenContainer/>
+      <ScreenContainer pageMode={props.pageMode}/>
       <Typography><b> Electron: {process.versions.electron}</b></Typography>
       <Typography>Version: {app.getVersion()}</Typography>
     </div>

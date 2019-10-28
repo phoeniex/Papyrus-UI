@@ -54,8 +54,9 @@ export const ModuleContainer = (props) => {
     <div id='moduleContainer'>
       {tabs.map(tab => (
         <TabPanel className={classes.root} key={tab.id} value={props.pageMode.id} index={tab.id}>
+        <ScreenCard addNewScreen setPageMode={props.setPageMode} moduleId={tab.id} screenCount={tab.screens.length}/>
           {tab.screens.map(screen => (
-            <ScreenCard setPageMode={props.setPageMode} moduleId={tab.id} {...screen}/>
+            <ScreenCard setPageMode={props.setPageMode} moduleId={tab.id} screenCount={tab.screens.length} {...screen}/>
           ))}
         </TabPanel>
       ))}

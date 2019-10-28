@@ -33,6 +33,8 @@ function createWindow() {
   );
   mainWindow.on('closed', () => (mainWindow = null))
   mainWindow.webContents.openDevTools()
+  dataStore.clear()
+
   BrowserWindow.addDevToolsExtension('/Users/rawipon/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.2.0_0')
 
   menu = Menu.buildFromTemplate([
@@ -145,7 +147,6 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
-    dataStore.clear()
   }
 });
 

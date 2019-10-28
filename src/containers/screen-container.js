@@ -17,6 +17,6 @@ export const ScreenContainer = (props) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>TEST</div>
+    <div className={classes.root}>{props.pageMode.id} + {props.pageMode.moduleId}</div>
   );
 }

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
   otherButton: {
     color: 'rgba(47, 47, 47, 0.6)',
-    width: 240,
+    width: 200,
     textTransform: 'none',
     height: 'fit-content',
     fontWeight: 300,

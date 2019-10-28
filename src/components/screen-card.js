@@ -7,6 +7,18 @@ const useStyles = makeStyles(theme => ({
     float: 'left',
     margin: 16,
   },
+  newScreenItem: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  newScreenText: {
+    fontSize: 12,
+    fontWeight: 300,
+    color: 'rgba(47, 47, 47, 0.6)',
+    textTransform: 'none',
+  },
   screenImageItem: {
     padding: 0,
   },
@@ -15,6 +27,12 @@ const useStyles = makeStyles(theme => ({
   },
   screenImage: {
     cursor: 'pointer',
+    width: 206,
+    height: 368,
+  },
+  newScreenImage: {
+    width: 42,
+    height: 42,
   },
   screenDetailItem: {
     display: 'flex',
@@ -37,21 +55,49 @@ const useStyles = makeStyles(theme => ({
 
 export const ScreenCard = (props) => {
   const classes = useStyles();
+  const isAddNewScreen = props.addNewScreen
+  const screenImage = props.image || require('./../images/background-screen-default.png')
+  const screenImage2x = props.image || require('./../images/background-screen-default@2x.png')
 
   const handleScreenClick = (event) => {
     console.log('Link To Screen of Module: ' + props.moduleId)
-    props.setPageMode({mode: 'screen', id: props.screenId, moduleId: props.moduleId})
+    props.setPageMode({mode: 'screen', id: isAddNewScreen ? props.screenCount : props.screenId, moduleId: props.moduleId})
+  }
+
+  function ScreenDetail() {
+    if(!isAddNewScreen) {
+      return <span className={classes.screenDetailItem}>
+        <Typography className={classes.screenName}>{props.name}</Typography>
+        <Typography className={classes.screenDetail}>{props.localizedCount} words</Typography>
+      </span>
+    }
+
+    return null
+  }
+
+  function NewScreen() {
+    const newScreenIcon = require('./../images/icon-add-new-screen@2x.png')
+    const newScreenIcon2x = require('./../images/icon-add-new-screen@2x.png')
+
+    if (isAddNewScreen) {
+      return <span className={classes.newScreenItem}>
+        <img src={newScreenIcon} srcSet={newScreenIcon2x + ' 2x'} alt='New Screen'/>
+        <Typography className={classes.newScreenText}>Add New Screen</Typography>
+      </span>
+    }
+
+    return null
   }
 
   return (
     <Box className={classes.root}>
-      <Paper className={classes.screenImageItem}>
-        <Button className={classes.screenImageButton} onClick={handleScreenClick}><img className={classes.screenImage} src={require('./../images/sample.png')} alt='Edit'/></Button>
+      <Paper elevation={props.addNewScreen ? 0 : 3} className={classes.screenImageItem}>
+        <Button className={classes.screenImageButton} onClick={handleScreenClick}>
+          <img className={classes.screenImage} src={screenImage} srcSet={screenImage2x + ' 2x'} alt='Screen'/>
+          <NewScreen className={classes.newScreenImage}/>
+        </Button>
       </Paper>
-      <span className={classes.screenDetailItem}>
-        <Typography className={classes.screenName}>{props.name}</Typography>
-        <Typography className={classes.screenDetail}>{props.localizedCount} words</Typography>
-      </span>
+      <ScreenDetail/>
     </Box>
   );
 }
